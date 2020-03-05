@@ -2,6 +2,7 @@ package project1;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /*
  * The main function of the project. Need several implementing.
  */
@@ -28,11 +29,58 @@ public class IntervalTreap {
 		return this.height;
 	}
 	
-	//Implement needed
+	//Insert nodes into tree
 	public void intervalInsert(Node z) {
-		
+		Random rand = new Random();
+		int priority = rand.nextInt(10 + this.size);
+		Node y = null;
+		Node x = this.root;
+		while(x != null) {
+			if(x.imax < z.imax){
+				x.imax = z.imax;
+			}
+			y = x;
+			if(z.interv.LOW < x.interv.LOW){
+				x = x.left;
+			}else{
+				x = x.right;
+			}
+		}
+		z.parent = y;
+		if(y == null){
+			this.root = z;
+		}else if(z.interv.LOW < y.interv.LOW){
+			y.left = z;
+		}else{
+			y.right = z;
+		}
+
 	}
 	
+	//Rotate left node
+	private void leftRotate(Node x){
+		Node y = x.right;
+		x.right = y.left;
+		if(y.left != null){
+			y.left.parent = x;
+		}
+		y.parent = x.parent;
+		if(x.parent == null){
+			this.root = y;
+		}else if(x == x.parent.left){
+			x.parent.left = y;
+		}else{
+			x.parent.right = y;
+		}
+		y.left = x;
+		x.parent = y;
+	}
+
+	//Rotate right node
+	private void rightRotate(Node x){
+		Node y = x.left;
+	}
+
 	//Implement needed
 	public void intervalDelete(Node z) {
 		
