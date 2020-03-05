@@ -31,9 +31,7 @@ public class IntervalTreap {
 	
 	//Insert nodes into tree, based on Algorithms from Binary Search Tree, modified
 	public void intervalInsert(Node z) {
-		Random rand = new Random();
 		this.size = this.size + 1;
-		z.priority = this.size + rand.nextInt(10);
 		z.imax = z.interv.HIGH;
 		Node y = null;
 		Node x = this.root;
@@ -177,8 +175,9 @@ public class IntervalTreap {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("Begin Test!");
 		IntervalTreap n = new IntervalTreap();
+		System.out.println("Begin Test!");
+		n.intervalInsert(new Node(new Interval(16, 21), 8));
 		
 	}
 }
