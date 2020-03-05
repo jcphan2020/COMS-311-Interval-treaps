@@ -55,7 +55,7 @@ public class IntervalTreap {
 			y.right = z;
 		}
 		Node s = z.parent;
-		while(z.priority < s.priority){
+		while(s != null && z.priority < s.priority){
 			if(s.right == z){
 				leftRotate(s);
 			}else{
@@ -140,7 +140,7 @@ public class IntervalTreap {
 	}
 
 	//Reconfigure the two nodes that were rotated, so both have the accurate imax
-	private imaxFix(Node y, Node x) {
+	private void imaxFix(Node y, Node x) {
 		if(x.left != null && x.right != null){
 			x.imax = max(x.interv.HIGH, x.left.imax, x.right.imax);
 		}else if(x.right != null){
@@ -152,9 +152,9 @@ public class IntervalTreap {
 		}
 		if(y.left != null && y.right != null){
 			y.imax = max(y.interv.HIGH, y.left.imax, y.right.imax);
-		}else if(x.right != null){
+		}else if(y.right != null){
 			y.imax = max(y.interv.HIGH, y.right.imax);
-		}else if(x.left != null){
+		}else if(y.left != null){
 			y.imax = max(y.interv.HIGH, y.left.imax);
 		}else{
 			y.imax = y.interv.HIGH;
@@ -174,10 +174,28 @@ public class IntervalTreap {
 		return max(max(a, b), c);
 	}
 
+	private void inorder(Node n) {
+		if(n != null) {
+			inorder(n.left);
+			System.out.println("["+n.interv.LOW +","+n.interv.HIGH+"]: IMAX: "+ Integer.toString(n.imax)+": Priority - "+ Integer.toString(n.priority));
+			inorder(n.right);
+		}
+	}
+
 	public static void main(String[] args) {
 		IntervalTreap n = new IntervalTreap();
 		System.out.println("Begin Test!");
 		n.intervalInsert(new Node(new Interval(16, 21), 8));
-		
+		n.intervalInsert(new Node(new Interval(25, 30), 10));
+		n.intervalInsert(new Node(new Interval(19, 20), 17));
+		n.intervalInsert(new Node(new Interval(26, 26), 11));
+		n.intervalInsert(new Node(new Interval(17, 19), 13));
+		n.intervalInsert(new Node(new Interval(0, 3), 21));
+		n.intervalInsert(new Node(new Interval(15, 23), 16));
+		n.intervalInsert(new Node(new Interval(5, 8), 17));
+		n.intervalInsert(new Node(new Interval(8, 9), 12));
+		n.intervalInsert(new Node(new Interval(6, 10), 20));
+		n.intervalInsert(new Node(new Interval(7, 25), 9));
+		n.inorder(n.root);
 	}
 }
