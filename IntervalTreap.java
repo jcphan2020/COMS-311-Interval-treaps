@@ -64,4 +64,10 @@ public class IntervalTreap {
 		
 		return lst;
 	}
+
+	public static void main(String[] args) {
+		System.out.println("Begin Test!");
+		IntervalTreap n = new IntervalTreap();
+		
+	}
 }
