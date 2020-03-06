@@ -70,28 +70,15 @@ public class IntervalTreap {
 		
 	}
 	
-	//Return the node with this interval
-	public Node intervalSearch(Interval i) {
-		Node x = this.root;
-		while(x != null && (i.HIGH < x.interv.LOW || x.interv.HIGH < i.LOW)) {
-			if(x.left != null && i.LOW <= x.left.imax) {
-				x = x.left;
-			}else {
-				x = x.right;
-			}
-		}
-		return x;
-	}
-	
-	//Implement for extra credit
+	//Using a portion of IntervalInsert Algorithm, it follows that path to find the Node.
 	public Node intervalSearchExactly(Interval i) {
 		Node x = this.root;
 		while(x != null) {
-			if(x.interv.LOW == i.LOW && x.interv.HIGH == i.HIGH){
+			if(x.interv.LOW == i.LOW && x.interv.HIGH == i.HIGH) {
 				return x;
-			}else if(x.left != null && i.LOW <= x.left.imax) {
+			}else if(i.LOW < x.interv.LOW){
 				x = x.left;
-			}else {
+			}else{
 				x = x.right;
 			}
 		}
@@ -204,6 +191,7 @@ public class IntervalTreap {
 		n.intervalInsert(new Node(new Interval(8, 9), 12));
 		n.intervalInsert(new Node(new Interval(6, 10), 20));
 		n.intervalInsert(new Node(new Interval(16, 25), 9));
+		System.out.println("Root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH +"]");
 		n.inorder(n.root);
 	}
 }
