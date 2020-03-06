@@ -86,7 +86,15 @@ public class IntervalTreap {
 	//Implement for extra credit
 	public Node intervalSearchExactly(Interval i) {
 		Node x = this.root;
-		
+		while(x != null) {
+			if(x.interv.LOW == i.LOW && x.interv.HIGH == i.HIGH){
+				return x;
+			}else if(x.left != null && i.LOW <= x.left.imax) {
+				x = x.left;
+			}else {
+				x = x.right;
+			}
+		}
 		return x;
 	}
 	
@@ -195,7 +203,7 @@ public class IntervalTreap {
 		n.intervalInsert(new Node(new Interval(5, 8), 17));
 		n.intervalInsert(new Node(new Interval(8, 9), 12));
 		n.intervalInsert(new Node(new Interval(6, 10), 20));
-		n.intervalInsert(new Node(new Interval(7, 25), 9));
+		n.intervalInsert(new Node(new Interval(16, 25), 9));
 		n.inorder(n.root);
 	}
 }
