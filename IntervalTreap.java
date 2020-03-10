@@ -78,7 +78,9 @@ public class IntervalTreap {
 			}
 			s = z.parent;
 		}
-		this.height = current_height;
+		if(this.height < current_height) {
+			this.height = current_height;
+		}
 	}
 	
 	//Implement needed
@@ -216,11 +218,11 @@ public class IntervalTreap {
 	}
 
 	//Delete after completion of project
-	private void inorder(Node n) {
+	private void inorder(Node n, int i) {
 		if(n != null) {
-			inorder(n.left);
-			System.out.println("["+n.interv.LOW +","+n.interv.HIGH+"]: IMAX: "+ Integer.toString(n.imax)+": Priority - "+ Integer.toString(n.priority));
-			inorder(n.right);
+			inorder(n.left, i + 1);
+			System.out.println("Height: "+i+": ["+n.interv.LOW +","+n.interv.HIGH+"]: IMAX: "+ Integer.toString(n.imax)+": Priority - "+ Integer.toString(n.priority));
+			inorder(n.right, i + 1);
 		}
 	}
 
@@ -239,6 +241,7 @@ public class IntervalTreap {
 		n.intervalInsert(new Node(new Interval(6, 10)));
 		n.intervalInsert(new Node(new Interval(16, 25)));
 		System.out.println("Root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH +"]");
-		n.inorder(n.root);
+		n.inorder(n.root, 0);
+		System.out.println(n.getHeight());
 	}
 }
