@@ -1,4 +1,4 @@
-package project1;
+
 /* 
  * Simple functions from the document.
  * This is a node for storing key values and other nodes.
@@ -10,10 +10,10 @@ public class Node {
 	int priority;
 	
 	//Create Object node for interval treap
-	public Node(Interval t, int p) {
+	public Node(Interval t) {
 		this.interv = t;
 		this.imax = t.getHigh();
-		this.priority = p;
+		this.priority = 0;
 	}
 	
 	//Return the parent node

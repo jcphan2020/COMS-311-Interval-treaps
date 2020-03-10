@@ -1,8 +1,7 @@
-package project1;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Random;
 /*
  * The main function of the project. Need several implementing.
  */
@@ -12,7 +11,11 @@ public class IntervalTreap {
 	int height;
 	
 	//Create Object IntervalTreap as empty
-	public IntervalTreap() {}
+	public IntervalTreap() {
+		this.root = null;
+		this.size = 0;
+		this.height = 0;
+	}
 
 	//Return the root node
 	public Node getRoot() {
@@ -30,15 +33,27 @@ public class IntervalTreap {
 	}
 	
 	//Insert nodes into tree, based on Algorithms from Binary Search Tree, modified
+	/*
+	 * Note that the first while loop is going down the root node to a leaf branch.
+	 * Therefore, this takes O(log n) time.
+	 * The next while loop is going back up the branch until root. This also takes
+	 * O(log n).
+	 * rightRotation, leftRotation, and imaxFix have no loops therefore takes O(1) time.
+	 * Finally conclusion, T(n) = c log n + c log n = O(log n)
+	 */
 	public void intervalInsert(Node z) {
 		this.size = this.size + 1;
 		z.imax = z.interv.HIGH;
+		Random rand = new Random();
+		z.priority = this.size + rand.nextInt(20);
+		int current_height = 0;
 		Node y = null;
 		Node x = this.root;
 		while(x != null) {
 			if(x.imax < z.imax){
 				x.imax = z.imax;
 			}
+			current_height++;
 			y = x;
 			if(z.interv.LOW < x.interv.LOW){
 				x = x.left;
@@ -63,6 +78,7 @@ public class IntervalTreap {
 			}
 			s = z.parent;
 		}
+		this.height = current_height;
 	}
 	
 	//Implement needed
@@ -71,6 +87,25 @@ public class IntervalTreap {
 	}
 	
 	//Using a portion of IntervalInsert Algorithm, it follows that path to find the Node.
+	/*
+	 * Algorithm goes from root down to one leaf branch therefore taking O(log n) time.
+	 */
+	public Node intervalSearch(Interval i) {
+		Node x = this.root;
+		while(x != null && i.LOW <= x.interv.HIGH && x.interv.LOW <= i.HIGH) {
+			if(i.LOW < x.interv.LOW) {
+				x = x.left;
+			}else {
+				x = x.right;
+			}
+		}
+		return x;
+	}
+
+	//Using a portion of IntervalInsert Algorithm, it follows that path to find the Node.
+	/*
+	 * Algorithm goes from root down to one leaf branch therefore taking O(log n) time.
+	 */
 	public Node intervalSearchExactly(Interval i) {
 		Node x = this.root;
 		while(x != null) {
@@ -94,6 +129,9 @@ public class IntervalTreap {
 
 	//Making the right child node the parent node with the current node as left child node
 	//Based on Algorithms from Red Black Tree, modified with imax
+	/*
+	 * Simple switch function. Takes O(1) time.
+	 */
 	private void leftRotate(Node x){
 		Node y = x.right;
 		x.right = y.left;
@@ -115,6 +153,9 @@ public class IntervalTreap {
 
 	//Making the left child node the parent node with the current node as right child node
 	//Based on Algorithms from Red Black Tree, modified with imax
+	/*
+	 * Simple switch function. Takes O(1) time.
+	 */
 	private void rightRotate(Node y){
 		Node x = y.left;
 		y.left = x.right;
@@ -135,6 +176,9 @@ public class IntervalTreap {
 	}
 
 	//Reconfigure the two nodes that were rotated, so both have the accurate imax
+	/*
+	 * Simple switch function. Takes O(1) time.
+	 */
 	private void imaxFix(Node y, Node x) {
 		if(x.left != null && x.right != null){
 			x.imax = max(x.interv.HIGH, x.left.imax, x.right.imax);
@@ -157,6 +201,7 @@ public class IntervalTreap {
 	}
 
 	//Return the largest value of a or b.
+	//Takes O(1) time
 	private int max(int a, int b) {
 		if(a > b) {
 			return a;
@@ -165,10 +210,12 @@ public class IntervalTreap {
 	}
 
 	//Return the largest of value a, b, or c.
+	//Still takes O(1) time
 	private int max(int a, int b, int c) {
 		return max(max(a, b), c);
 	}
 
+	//Delete after completion of project
 	private void inorder(Node n) {
 		if(n != null) {
 			inorder(n.left);
@@ -180,17 +227,17 @@ public class IntervalTreap {
 	public static void main(String[] args) {
 		IntervalTreap n = new IntervalTreap();
 		System.out.println("Begin Test!");
-		n.intervalInsert(new Node(new Interval(16, 21), 8));
-		n.intervalInsert(new Node(new Interval(25, 30), 10));
-		n.intervalInsert(new Node(new Interval(19, 20), 17));
-		n.intervalInsert(new Node(new Interval(26, 26), 11));
-		n.intervalInsert(new Node(new Interval(17, 19), 13));
-		n.intervalInsert(new Node(new Interval(0, 3), 21));
-		n.intervalInsert(new Node(new Interval(15, 23), 16));
-		n.intervalInsert(new Node(new Interval(5, 8), 17));
-		n.intervalInsert(new Node(new Interval(8, 9), 12));
-		n.intervalInsert(new Node(new Interval(6, 10), 20));
-		n.intervalInsert(new Node(new Interval(16, 25), 9));
+		n.intervalInsert(new Node(new Interval(16, 21)));
+		n.intervalInsert(new Node(new Interval(25, 30)));
+		n.intervalInsert(new Node(new Interval(19, 20)));
+		n.intervalInsert(new Node(new Interval(26, 26)));
+		n.intervalInsert(new Node(new Interval(17, 19)));
+		n.intervalInsert(new Node(new Interval(0, 3)));
+		n.intervalInsert(new Node(new Interval(15, 23)));
+		n.intervalInsert(new Node(new Interval(5, 8)));
+		n.intervalInsert(new Node(new Interval(8, 9)));
+		n.intervalInsert(new Node(new Interval(6, 10)));
+		n.intervalInsert(new Node(new Interval(16, 25)));
 		System.out.println("Root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH +"]");
 		n.inorder(n.root);
 	}

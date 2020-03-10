@@ -1,4 +1,4 @@
-package project1;
+
 /* 
  * Fairly simple based on document.
  * Create interval for storing just the left and right end points.
