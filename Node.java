@@ -1,3 +1,4 @@
+import java.util.Random;
 
 /* 
  * Simple functions from the document.
@@ -13,7 +14,8 @@ public class Node {
 	public Node(Interval t) {
 		this.interv = t;
 		this.imax = t.getHigh();
-		this.priority = 0;
+		Random rand = new Random();
+		this.priority = 1 + rand.nextInt(100);
 	}
 	
 	//Return the parent node

@@ -1,7 +1,6 @@
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 /*
  * The main function of the project. Need several implementing.
  */
@@ -44,8 +43,6 @@ public class IntervalTreap {
 	public void intervalInsert(Node z) {
 		this.size = this.size + 1;
 		z.imax = z.interv.HIGH;
-		Random rand = new Random();
-		z.priority = this.size + rand.nextInt(20);
 		int current_height = 0;
 		Node y = null;
 		Node x = this.root;
@@ -94,8 +91,11 @@ public class IntervalTreap {
 	 */
 	public Node intervalSearch(Interval i) {
 		Node x = this.root;
-		while(x != null && i.LOW <= x.interv.HIGH && x.interv.LOW <= i.HIGH) {
-			if(i.LOW < x.interv.LOW) {
+		while(x != null) {
+			if((i.LOW <= x.interv.HIGH && x.interv.LOW <= i.HIGH) || (i.LOW <= x.interv.HIGH && x.interv.LOW <= i.HIGH)) {
+				return x;
+			}
+			if(x.left != null && i.LOW <= x.left.imax) {
 				x = x.left;
 			}else {
 				x = x.right;
@@ -228,18 +228,9 @@ public class IntervalTreap {
 
 	public static void main(String[] args) {
 		IntervalTreap n = new IntervalTreap();
+		System.out.println("Initializing!");
+		n.root = new Node(new Interval(16, 21));
 		System.out.println("Begin Test!");
-		n.intervalInsert(new Node(new Interval(16, 21)));
-		n.intervalInsert(new Node(new Interval(25, 30)));
-		n.intervalInsert(new Node(new Interval(19, 20)));
-		n.intervalInsert(new Node(new Interval(26, 26)));
-		n.intervalInsert(new Node(new Interval(17, 19)));
-		n.intervalInsert(new Node(new Interval(0, 3)));
-		n.intervalInsert(new Node(new Interval(15, 23)));
-		n.intervalInsert(new Node(new Interval(5, 8)));
-		n.intervalInsert(new Node(new Interval(8, 9)));
-		n.intervalInsert(new Node(new Interval(6, 10)));
-		n.intervalInsert(new Node(new Interval(16, 25)));
 		System.out.println("Root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH +"]");
 		n.inorder(n.root, 0);
 		System.out.println(n.getHeight());
