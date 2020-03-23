@@ -21,7 +21,7 @@ private void imaxFixAll(Node x){
     }
 }
 
-public void intervalDelete(Node z){
+public Node intervalDelete(Node z){
     Node rt = this.root;
     //check empty tree
     if(rt == null){
@@ -82,8 +82,6 @@ public void intervalDelete(Node z){
             imaxFixAll(rt);
         }
     }
-
-    // update imax by two possible paths 
 
     return rt;
 }
