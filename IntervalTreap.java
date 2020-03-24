@@ -105,66 +105,67 @@ public class IntervalTreap {
 	}
 
 	public void intervalDelete(Node z){
-    	Node rt = this.root;
+	//	Node rt = this.root;
+		//Based on the pseudocode in BST, we don't need to check whether the Node z exists or not.
     	//check empty tree
-    	if(rt == null){
-			System.out.println("The Node doesn't exist!");
-   		}
+    //	if(rt == null){
+	//		System.out.println("The Node doesn't exist!");
+   	//	}
 
-    	// if the z.imax < root.imax, search in the left sub treap
-    	if(z.interv.LOW < rt.interv.LOW){
-    		rt.left = intervalDelete(z);
-    	}
+    //	// if the z.imax < root.imax, search in the left sub treap
+    //	if(z.interv.LOW < rt.interv.LOW){
+    //		rt.left = intervalDelete(z.left);
+    //	}
 
     	//if the z.imax > root.imax, search in the right sub treap
-    	else if(z.interv.LOW > rt.interv.LOW){
-            rt.right = intervalDelete(z);
-    	}
+    //	else if(z.interv.LOW > rt.interv.LOW){
+    //        rt.right = intervalDelete(z.right);
+    //	}
 
     	//if key found
-    	else{
+    //	else{
        		//Case 1: the node has no child
-        	if(rt.left == null && rt.right == null){
+        	if(z.left == null && z.right == null){
         	    //save rt parent in p
-        	    p = rt.parent;
+        	    p = z.parent;
 
         	    //delete z
-        	    rt = null;
+        	    z = null;
 
         	    // fix the imax of all nodes in the path from the former parent of z to the real root of the treap
         	    imaxFixAll(p);
-        }
+    	    }
 
         	//Case 2: the node has two children
-        	else if(rt.left != null && rt.right != null){
+        	else if(z.left != null && z.right != null){
         	    //if the priority of the left child less than that of the right one
-        	    if(rt.left.priority < rt.right.priority){
-        	        leftRotate(rt);
-        	        rt.left = intervalDelete(z);
+        	    if(z.left.priority < z.right.priority){
+					leftRotate(z);
+					//after left rotation above, z became the left child of its original right child
+        	        intervalDelete(z);
         	    }
         	    //if the priority of the right child less than that of the left one
         	    else{
-        	        rightRotate(rt);
-        			rt.right = intervalDelete(z);
+					rightRotate(z);
+					//after right rotation above, z became the right child of its original left child
+        			intervalDelete(z);
             	}
-            	//after deleted original rt, fix the imax of all nodes in the path from new rt to the real root of the treap
-            	imaxFixAll(rt);
         	}
 
         	//Case 3: the node has one child only
         	else{
         	    // the node has right child only, replace the node with its right child
-        	    if(rt.left == Null){
-        	        rt = rt.right;
+        	    if(rt.left == null){
+        	        z = z.right;
         	    }
         	    // the node has left child only, replace the node with its left child
         	    else{
-        	        rt = rt.left;
+        	        z = z.left;
         	    }
-        	    //after deleted original rt, fix the imax of all nodes in the path from new rt to the real root of the treap
-        	    imaxFixAll(rt);
+        	    //after deleted original z, fix the imax of all nodes in the path from new z to the real root of the treap
+        	    imaxFixAll(z);
         	}
-    	}
+    	//}
 	}
 	
 	//Using a portion of IntervalInsert Algorithm, it follows that path to find the Node.
