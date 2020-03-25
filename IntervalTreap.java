@@ -83,7 +83,7 @@ public class IntervalTreap {
 
 	//fix the imax of only one node based on its children
 	private void imaxFix1(Node x){
-    if(x.left != null && x.right != null){
+    	if(x.left != null && x.right != null){
 	        x.imax = max(x.interv.HIGH, x.left.imax, x.right.imax);
     	}else if(x.right != null){
         	x.imax = max(x.interv.HIGH, x.right.imax);
@@ -127,10 +127,19 @@ public class IntervalTreap {
        		//Case 1: the node has no child
         	if(z.left == null && z.right == null){
         	    //save rt parent in p
-        	    p = z.parent;
+        	    p = z.parent; // Johnson -> Need the word Node at the start to get rid of error sign. Look at my codes in intervalInsert for examples
 
         	    //delete z
         	    z = null;
+				
+				/* Johnson ->
+				 * "z" is considered a storage. You can store other objects in "z"
+				 * Currently, "z" is stored as a Node Object. If you set "z" to "null". You are just storing "null"
+				 * The Node Object in "z" is still exist in the parent node and in the left and right node so
+				 * setting "z" to "null" likely won't change anything.
+				 * 
+				 * imaxFixAll(Node x) works fine though.
+				 */
 
         	    // fix the imax of all nodes in the path from the former parent of z to the real root of the treap
         	    imaxFixAll(p);
@@ -155,12 +164,12 @@ public class IntervalTreap {
         	//Case 3: the node has one child only
         	else{
         	    // the node has right child only, replace the node with its right child
-        	    if(rt.left == null){
-        	        z = z.right;
+        	    if(rt.left == null){ // Johnson -> Is this "rt" supposed to be here?
+        	        z = z.right;	// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
         	    }
         	    // the node has left child only, replace the node with its left child
         	    else{
-        	        z = z.left;
+        	        z = z.left;		// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
         	    }
         	    //after deleted original z, fix the imax of all nodes in the path from new z to the real root of the treap
         	    imaxFixAll(z);
@@ -206,7 +215,7 @@ public class IntervalTreap {
 	}
 	
 	//Implement for extra credit
-	public List<Interval> overlappingIntervals(Interval i){
+	public List<Interval> overlappingIntervals(Interval i){ //Johnson -> I'll leave this one to you if you want some extra credit!
 		List<Interval> lst = new ArrayList<Interval>();
 		
 		return lst;
