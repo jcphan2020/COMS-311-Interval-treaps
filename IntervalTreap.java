@@ -98,8 +98,8 @@ public class IntervalTreap {
 	private void imaxFixAll(Node x){
 	    while(x != null){// loop stops when x == null
  	       //Fix the imax of x itself
- 	       imaxFix1(p);
- 	       //replace p with its parent
+ 	       imaxFix1(x);
+ 	       //replace x with its parent
  	       x = x.parent;
  	   }
 	}
