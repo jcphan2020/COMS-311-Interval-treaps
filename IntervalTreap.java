@@ -43,41 +43,53 @@ public class IntervalTreap {
 	public void intervalInsert(Node z) {
 		this.size = this.size + 1;
 		z.imax = z.interv.HIGH;
-		int current_height = 0;
+		int height = 0;
 		Node y = null;
 		Node x = this.root;
 		while(x != null) {
 			if(x.imax < z.imax){
 				x.imax = z.imax;
 			}
-			current_height++;
 			y = x;
 			if(z.interv.LOW < x.interv.LOW){
 				x = x.left;
 			}else{
 				x = x.right;
 			}
+			height += 1;
 		}
 		z.parent = y;
-		if(y == null){
+		z.height = height;
+		if(y == null) {
 			this.root = z;
 		}else if(z.interv.LOW < y.interv.LOW){
 			y.left = z;
 		}else{
 			y.right = z;
 		}
-		Node s = z.parent;
-		while(s != null && z.priority < s.priority){
-			if(s.right == z){
-				leftRotate(s);
+		Node s = null;
+		while(y != null && z.priority < y.priority){
+			y.height = --height;
+			if(y.right == z){
+				leftRotate(y);
+				if(s == null) s = y;
 			}else{
-				rightRotate(s);
+				rightRotate(y);
+				if(s == null) s = y;
 			}
-			s = z.parent;
+			heightFix(z);
+			y = z.parent;
 		}
-		if(this.height < current_height) {
-			this.height = current_height;
+		if(s == null) s = z;
+		boolean skipFirst = false;
+		while(s != null) {
+			if(skipFirst) {
+				heightFix(s);
+			}
+			skipFirst = true;
+			s = s.parent;
 		}
+		this.height = this.root.height;
 	}
 	
 
@@ -228,6 +240,13 @@ public class IntervalTreap {
 	 */
 	private void leftRotate(Node x){
 		Node y = x.right;
+		if(y.right != null) y.right.height -= 1;
+		y.height = x.height;
+		if(x.left != null) {
+			x.height = ++x.left.height;
+		}else {
+			x.height += 1;
+		}
 		x.right = y.left;
 		if(y.left != null) {
 			y.left.parent = x;
@@ -252,6 +271,13 @@ public class IntervalTreap {
 	 */
 	private void rightRotate(Node y){
 		Node x = y.left;
+		if(x.left != null) x.left.height -= 1;
+		x.height  = y.height;
+		if(y.right != null) {
+			y.height = ++y.right.height;
+		}else {
+			y.height += 1;
+		}
 		y.left = x.right;
 		if(x.right != null) {
 			x.right.parent = y;
@@ -269,6 +295,15 @@ public class IntervalTreap {
 		imaxFix(x, y);
 	}
 
+	private void heightFix(Node x) {
+		if(x.left != null && x.right != null) {
+			x.height = max(x.left.height, x.right.height);
+		}else if(x.left != null) {
+			x.height = x.left.height;
+		}else if(x.right != null) {
+			x.height = x.right.height;
+		}
+	}
 	//Reconfigure the two nodes that were rotated, so both have the accurate imax
 	/*
 	 * Simple switch function. Takes O(1) time.
@@ -313,7 +348,7 @@ public class IntervalTreap {
 	private void inorder(Node n, int i) {
 		if(n != null) {
 			inorder(n.left, i + 1);
-			System.out.println("Height: "+i+": ["+n.interv.LOW +","+n.interv.HIGH+"]: IMAX: "+ Integer.toString(n.imax)+": Priority - "+ Integer.toString(n.priority));
+			System.out.println("Height: "+i+" - "+n.height+": ["+n.interv.LOW +","+n.interv.HIGH+"]: IMAX: "+ Integer.toString(n.imax)+": Priority - "+ Integer.toString(n.priority));
 			inorder(n.right, i + 1);
 		}
 	}
@@ -321,10 +356,18 @@ public class IntervalTreap {
 	public static void main(String[] args) {
 		IntervalTreap n = new IntervalTreap();
 		System.out.println("Initializing!");
-		n.root = new Node(new Interval(16, 21));
+		n.intervalInsert(new Node(new Interval(16, 21)));
+		n.intervalInsert(new Node(new Interval(8, 9)));
+		n.intervalInsert(new Node(new Interval(25, 30)));
+		n.intervalInsert(new Node(new Interval(5, 8)));
+		n.intervalInsert(new Node(new Interval(15, 23)));
+		n.intervalInsert(new Node(new Interval(0, 3)));
+		n.intervalInsert(new Node(new Interval(6, 10)));
+		n.intervalInsert(new Node(new Interval(17, 19)));
+		n.intervalInsert(new Node(new Interval(26, 26)));
+		n.intervalInsert(new Node(new Interval(19, 20)));
 		System.out.println("Begin Test!");
-		System.out.println("Root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH +"]");
 		n.inorder(n.root, 0);
-		System.out.println(n.getHeight());
+		System.out.println("Root: [" + n.root.height +"]");
 	}
 }
