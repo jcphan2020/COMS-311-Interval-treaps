@@ -37,7 +37,9 @@ public class IntervalTreap {
 	 * Therefore, this takes O(log n) time.
 	 * The next while loop is going back up the branch until root. This also takes
 	 * O(log n).
-	 * rightRotation, leftRotation, and imaxFix have no loops therefore takes O(1) time.
+	 * rightRotation, leftRotation, imaxFix, and heightFix have no loops therefore takes O(1) time.
+	 * The while loop after the rotations is a continuation of the rotation loop returning to the root,
+	 * therefore the rotation loop + continuation loop = O(log n)
 	 * Finally conclusion, T(n) = c log n + c log n = O(log n)
 	 */
 	public void intervalInsert(Node z) {
@@ -51,6 +53,7 @@ public class IntervalTreap {
 				x.imax = z.imax;
 			}
 			y = x;
+			y.height = height;
 			if(z.interv.LOW < x.interv.LOW){
 				x = x.left;
 			}else{
@@ -67,27 +70,19 @@ public class IntervalTreap {
 		}else{
 			y.right = z;
 		}
-		Node s = null;
+
 		while(y != null && z.priority < y.priority){
-			y.height = --height;
 			if(y.right == z){
 				leftRotate(y);
-				if(s == null) s = y;
 			}else{
 				rightRotate(y);
-				if(s == null) s = y;
 			}
 			heightFix(z);
 			y = z.parent;
 		}
-		if(s == null) s = z;
-		boolean skipFirst = false;
-		while(s != null) {
-			if(skipFirst) {
-				heightFix(s);
-			}
-			skipFirst = true;
-			s = s.parent;
+		while(y != null) {
+			heightFix(y);
+			y = y.parent;
 		}
 		this.height = this.root.height;
 	}
@@ -234,23 +229,26 @@ public class IntervalTreap {
 	}
 
 	//Making the right child node the parent node with the current node as left child node
-	//Based on Algorithms from Red Black Tree, modified with imax
+	//Based on Algorithms from Red Black Tree, modified with imax. Additionally, modify x.left node height and y.right node height.
 	/*
 	 * Simple switch function. Takes O(1) time.
+	 * The change in height takes 7 iterations or O(1) running time.
+	 * Total running time is O(1)
 	 */
 	private void leftRotate(Node x){
 		Node y = x.right;
-		if(y.right != null) y.right.height -= 1;
-		y.height = x.height;
-		if(x.left != null) {
-			x.height = ++x.left.height;
-		}else {
-			x.height += 1;
+
+		if(x.left != null) x.left.height += 1;
+		x.height += 1;
+		y.height -= 1;
+		if(y.right != null) {
+			y.right.height -= 1;
+			if(y.right.left != null) y.right.left.height -= 1;
+			if(y.right.right != null) y.right.right.height -= 1;
 		}
+
 		x.right = y.left;
-		if(y.left != null) {
-			y.left.parent = x;
-		}
+		if(y.left != null) y.left.parent = x;
 		y.parent = x.parent;
 		if(x.parent == null) {
 			this.root = y;
@@ -261,27 +259,34 @@ public class IntervalTreap {
 		}
 		y.left = x;
 		x.parent = y;
+
 		imaxFix(y, x);
+		heightFix(x);
+		if(y.right != null) heightFix(y.right);
+		heightFix(y);
 	}
 
 	//Making the left child node the parent node with the current node as right child node
-	//Based on Algorithms from Red Black Tree, modified with imax
+	//Based on Algorithms from Red Black Tree, modified with imax. Additionally, modify x.left node height and y.right node height.
 	/*
 	 * Simple switch function. Takes O(1) time.
+	 * The change in height takes 7 iterations or O(1) running time.
+	 * Total running time is O(1)
 	 */
 	private void rightRotate(Node y){
 		Node x = y.left;
-		if(x.left != null) x.left.height -= 1;
-		x.height  = y.height;
-		if(y.right != null) {
-			y.height = ++y.right.height;
-		}else {
-			y.height += 1;
+		
+		if(y.right != null) y.right.height += 1;
+		y.height += 1;
+		x.height -= 1;
+		if(x.left != null) {
+			x.left.height -= 1;
+			if(x.left.left != null) x.left.left.height -= 1;
+			if(x.left.right != null) x.left.right.height -= 1;
 		}
+
 		y.left = x.right;
-		if(x.right != null) {
-			x.right.parent = y;
-		}
+		if(x.right != null) x.right.parent = y;
 		x.parent = y.parent;
 		if(y.parent == null) {
 			this.root = x;
@@ -292,9 +297,17 @@ public class IntervalTreap {
 		}
 		x.right = y;
 		y.parent = x;
+
 		imaxFix(x, y);
+		heightFix(y);
+		if(x.left != null) heightFix(x.left);
+		heightFix(x);
 	}
 
+	//Created to fix the height of the current node with the left or right. No changes if no children nodes.
+	/*
+	 * Takes 6 iterations or O(1) running time.
+	 */
 	private void heightFix(Node x) {
 		if(x.left != null && x.right != null) {
 			x.height = max(x.left.height, x.right.height);
@@ -348,7 +361,7 @@ public class IntervalTreap {
 	private void inorder(Node n, int i) {
 		if(n != null) {
 			inorder(n.left, i + 1);
-			System.out.println("Height: "+i+" - "+n.height+": ["+n.interv.LOW +","+n.interv.HIGH+"]: IMAX: "+ Integer.toString(n.imax)+": Priority - "+ Integer.toString(n.priority));
+			System.out.println("Actual Height: "+i+" |Stored Height: "+n.height+"| ["+n.interv.LOW +","+n.interv.HIGH+"]| IMAX: "+ Integer.toString(n.imax)+"| Priority: "+ Integer.toString(n.priority));
 			inorder(n.right, i + 1);
 		}
 	}
