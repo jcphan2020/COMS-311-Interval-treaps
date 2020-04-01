@@ -140,13 +140,13 @@ public class IntervalTreap {
         	else if(z.left != null && z.right != null){
         	    //if the priority of the left child less than that of the right one
         	    if(z.left.priority < z.right.priority){
-					leftRotate(z);
+					rightRotate(z);
 					//after left rotation above, z became the left child of its original right child
         	        intervalDelete(z);
         	    }
         	    //if the priority of the right child less than that of the left one
         	    else{
-					rightRotate(z);
+					leftRotate(z);
 					//after right rotation above, z became the right child of its original left child
         			intervalDelete(z);
             	}
