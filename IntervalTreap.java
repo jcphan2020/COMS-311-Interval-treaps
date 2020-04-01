@@ -134,11 +134,11 @@ public class IntervalTreap {
        		//Case 1: the node has no child
         	if(z.left == null && z.right == null){
         	    //save rt parent in p
-        	    p = z.parent; // Johnson -> Need the word Node at the start to get rid of error sign. Look at my codes in intervalInsert for examples
+        	    Note p = z.parent; // Johnson -> Need the word Node at the start to get rid of error sign. Look at my codes in intervalInsert for examples
 
         	    //delete z
-        	    z = null;
-				
+				z = null;
+
 				/* Johnson ->
 				 * "z" is considered a storage. You can store other objects in "z"
 				 * Currently, "z" is stored as a Node Object. If you set "z" to "null". You are just storing "null"
@@ -171,7 +171,7 @@ public class IntervalTreap {
         	//Case 3: the node has one child only
         	else{
         	    // the node has right child only, replace the node with its right child
-        	    if(rt.left == null){ // Johnson -> Is this "rt" supposed to be here?
+        	    if(z.left == null){ // Johnson -> Is this "rt" supposed to be here?
         	        z = z.right;	// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
         	    }
         	    // the node has left child only, replace the node with its left child
