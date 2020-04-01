@@ -37,53 +37,60 @@ public class IntervalTreap {
 	 * Therefore, this takes O(log n) time.
 	 * The next while loop is going back up the branch until root. This also takes
 	 * O(log n).
-	 * rightRotation, leftRotation, and imaxFix have no loops therefore takes O(1) time.
+	 * rightRotation, leftRotation, imaxFix, and heightFix have no loops therefore takes O(1) time.
+	 * The while loop after the rotations is a continuation of the rotation loop returning to the root,
+	 * therefore the rotation loop + continuation loop = O(log n)
 	 * Finally conclusion, T(n) = c log n + c log n = O(log n)
 	 */
 	public void intervalInsert(Node z) {
 		this.size = this.size + 1;
 		z.imax = z.interv.HIGH;
-		int current_height = 0;
+		int height = 0;
 		Node y = null;
 		Node x = this.root;
 		while(x != null) {
 			if(x.imax < z.imax){
 				x.imax = z.imax;
 			}
-			current_height++;
 			y = x;
+			y.height = height;
 			if(z.interv.LOW < x.interv.LOW){
 				x = x.left;
 			}else{
 				x = x.right;
 			}
+			height += 1;
 		}
 		z.parent = y;
-		if(y == null){
+		z.height = height;
+		if(y == null) {
 			this.root = z;
 		}else if(z.interv.LOW < y.interv.LOW){
 			y.left = z;
 		}else{
 			y.right = z;
 		}
-		Node s = z.parent;
-		while(s != null && z.priority < s.priority){
-			if(s.right == z){
-				leftRotate(s);
+
+		while(y != null && z.priority < y.priority){
+			if(y.right == z){
+				leftRotate(y);
 			}else{
-				rightRotate(s);
+				rightRotate(y);
 			}
-			s = z.parent;
+			heightFix(z);
+			y = z.parent;
 		}
-		if(this.height < current_height) {
-			this.height = current_height;
+		while(y != null) {
+			heightFix(y);
+			y = y.parent;
 		}
+		this.height = this.root.height;
 	}
 	
 
 	//fix the imax of only one node based on its children
 	private void imaxFix1(Node x){
-    if(x.left != null && x.right != null){
+    	if(x.left != null && x.right != null){
 	        x.imax = max(x.interv.HIGH, x.left.imax, x.right.imax);
     	}else if(x.right != null){
         	x.imax = max(x.interv.HIGH, x.right.imax);
@@ -127,10 +134,19 @@ public class IntervalTreap {
        		//Case 1: the node has no child
         	if(z.left == null && z.right == null){
         	    //save rt parent in p
-        	    p = z.parent;
+        	    p = z.parent; // Johnson -> Need the word Node at the start to get rid of error sign. Look at my codes in intervalInsert for examples
 
         	    //delete z
         	    z = null;
+				
+				/* Johnson ->
+				 * "z" is considered a storage. You can store other objects in "z"
+				 * Currently, "z" is stored as a Node Object. If you set "z" to "null". You are just storing "null"
+				 * The Node Object in "z" is still exist in the parent node and in the left and right node so
+				 * setting "z" to "null" likely won't change anything.
+				 * 
+				 * imaxFixAll(Node x) works fine though.
+				 */
 
         	    // fix the imax of all nodes in the path from the former parent of z to the real root of the treap
         	    imaxFixAll(p);
@@ -155,12 +171,12 @@ public class IntervalTreap {
         	//Case 3: the node has one child only
         	else{
         	    // the node has right child only, replace the node with its right child
-        	    if(rt.left == null){
-        	        z = z.right;
+        	    if(rt.left == null){ // Johnson -> Is this "rt" supposed to be here?
+        	        z = z.right;	// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
         	    }
         	    // the node has left child only, replace the node with its left child
         	    else{
-        	        z = z.left;
+        	        z = z.left;		// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
         	    }
         	    //after deleted original z, fix the imax of all nodes in the path from new z to the real root of the treap
         	    imaxFixAll(z);
@@ -206,23 +222,33 @@ public class IntervalTreap {
 	}
 	
 	//Implement for extra credit
-	public List<Interval> overlappingIntervals(Interval i){
+	public List<Interval> overlappingIntervals(Interval i){ //Johnson -> I'll leave this one to you if you want some extra credit!
 		List<Interval> lst = new ArrayList<Interval>();
 		
 		return lst;
 	}
 
 	//Making the right child node the parent node with the current node as left child node
-	//Based on Algorithms from Red Black Tree, modified with imax
+	//Based on Algorithms from Red Black Tree, modified with imax. Additionally, modify x.left node height and y.right node height.
 	/*
 	 * Simple switch function. Takes O(1) time.
+	 * The change in height takes 7 iterations or O(1) running time.
+	 * Total running time is O(1)
 	 */
 	private void leftRotate(Node x){
 		Node y = x.right;
-		x.right = y.left;
-		if(y.left != null) {
-			y.left.parent = x;
+
+		if(x.left != null) x.left.height += 1;
+		x.height += 1;
+		y.height -= 1;
+		if(y.right != null) {
+			y.right.height -= 1;
+			if(y.right.left != null) y.right.left.height -= 1;
+			if(y.right.right != null) y.right.right.height -= 1;
 		}
+
+		x.right = y.left;
+		if(y.left != null) y.left.parent = x;
 		y.parent = x.parent;
 		if(x.parent == null) {
 			this.root = y;
@@ -233,20 +259,34 @@ public class IntervalTreap {
 		}
 		y.left = x;
 		x.parent = y;
+
 		imaxFix(y, x);
+		heightFix(x);
+		if(y.right != null) heightFix(y.right);
+		heightFix(y);
 	}
 
 	//Making the left child node the parent node with the current node as right child node
-	//Based on Algorithms from Red Black Tree, modified with imax
+	//Based on Algorithms from Red Black Tree, modified with imax. Additionally, modify x.left node height and y.right node height.
 	/*
 	 * Simple switch function. Takes O(1) time.
+	 * The change in height takes 7 iterations or O(1) running time.
+	 * Total running time is O(1)
 	 */
 	private void rightRotate(Node y){
 		Node x = y.left;
-		y.left = x.right;
-		if(x.right != null) {
-			x.right.parent = y;
+		
+		if(y.right != null) y.right.height += 1;
+		y.height += 1;
+		x.height -= 1;
+		if(x.left != null) {
+			x.left.height -= 1;
+			if(x.left.left != null) x.left.left.height -= 1;
+			if(x.left.right != null) x.left.right.height -= 1;
 		}
+
+		y.left = x.right;
+		if(x.right != null) x.right.parent = y;
 		x.parent = y.parent;
 		if(y.parent == null) {
 			this.root = x;
@@ -257,9 +297,26 @@ public class IntervalTreap {
 		}
 		x.right = y;
 		y.parent = x;
+
 		imaxFix(x, y);
+		heightFix(y);
+		if(x.left != null) heightFix(x.left);
+		heightFix(x);
 	}
 
+	//Created to fix the height of the current node with the left or right. No changes if no children nodes.
+	/*
+	 * Takes 6 iterations or O(1) running time.
+	 */
+	private void heightFix(Node x) {
+		if(x.left != null && x.right != null) {
+			x.height = max(x.left.height, x.right.height);
+		}else if(x.left != null) {
+			x.height = x.left.height;
+		}else if(x.right != null) {
+			x.height = x.right.height;
+		}
+	}
 	//Reconfigure the two nodes that were rotated, so both have the accurate imax
 	/*
 	 * Simple switch function. Takes O(1) time.
@@ -304,7 +361,7 @@ public class IntervalTreap {
 	private void inorder(Node n, int i) {
 		if(n != null) {
 			inorder(n.left, i + 1);
-			System.out.println("Height: "+i+": ["+n.interv.LOW +","+n.interv.HIGH+"]: IMAX: "+ Integer.toString(n.imax)+": Priority - "+ Integer.toString(n.priority));
+			System.out.println("Actual Height: "+i+" |Stored Height: "+n.height+"| ["+n.interv.LOW +","+n.interv.HIGH+"]| IMAX: "+ Integer.toString(n.imax)+"| Priority: "+ Integer.toString(n.priority));
 			inorder(n.right, i + 1);
 		}
 	}
@@ -312,10 +369,18 @@ public class IntervalTreap {
 	public static void main(String[] args) {
 		IntervalTreap n = new IntervalTreap();
 		System.out.println("Initializing!");
-		n.root = new Node(new Interval(16, 21));
+		n.intervalInsert(new Node(new Interval(16, 21)));
+		n.intervalInsert(new Node(new Interval(8, 9)));
+		n.intervalInsert(new Node(new Interval(25, 30)));
+		n.intervalInsert(new Node(new Interval(5, 8)));
+		n.intervalInsert(new Node(new Interval(15, 23)));
+		n.intervalInsert(new Node(new Interval(0, 3)));
+		n.intervalInsert(new Node(new Interval(6, 10)));
+		n.intervalInsert(new Node(new Interval(17, 19)));
+		n.intervalInsert(new Node(new Interval(26, 26)));
+		n.intervalInsert(new Node(new Interval(19, 20)));
 		System.out.println("Begin Test!");
-		System.out.println("Root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH +"]");
 		n.inorder(n.root, 0);
-		System.out.println(n.getHeight());
+		System.out.println("Root: [" + n.root.height +"]");
 	}
 }

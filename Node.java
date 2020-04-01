@@ -9,11 +9,13 @@ public class Node {
 	Interval interv;
 	int imax;
 	int priority;
+	int height;
 	
 	//Create Object node for interval treap
 	public Node(Interval t) {
 		this.interv = t;
 		this.imax = t.getHigh();
+		this.height = 0;
 		Random rand = new Random();
 		this.priority = 1 + rand.nextInt(100);
 	}
