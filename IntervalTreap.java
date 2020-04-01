@@ -136,9 +136,12 @@ public class IntervalTreap {
         	    //save rt parent in p
         	    Node p = z.parent; // Johnson -> Need the word Node at the start to get rid of error sign. Look at my codes in intervalInsert for examples
 
-        	    //delete z
-				z = null;
-
+				//delete z
+				if(z == z.parent.left){
+					z.parent.left = null;
+				}else{
+					z.parent.right = null;
+				}
 				/* Johnson ->
 				 * "z" is considered a storage. You can store other objects in "z"
 				 * Currently, "z" is stored as a Node Object. If you set "z" to "null". You are just storing "null"
@@ -172,12 +175,24 @@ public class IntervalTreap {
         	else{
         	    // the node has right child only, replace the node with its right child
         	    if(z.left == null){ // Johnson -> Is this "rt" supposed to be here?
-        	        z = z.right;	// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
-        	    }
+					if(z == z.parent.left){
+						z.parent.left = z.right;	// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
+						z = null;
+					}else{
+						z.parent.right = z.right;
+						z = null;
+					}
+				}
         	    // the node has left child only, replace the node with its left child
         	    else{
-        	        z = z.left;		// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
-        	    }
+					if(z == z.parent.left){
+        	        	z.parent.left = z.left;		// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
+						z = null;
+					}else{
+						z.parent.right = z.left;
+						z = null;
+					}
+				}
         	    //after deleted original z, fix the imax of all nodes in the path from new z to the real root of the treap
         	    imaxFixAll(z);
         	}
@@ -396,6 +411,10 @@ public class IntervalTreap {
 		n.intervalInsert(new Node(new Interval(26, 26)));
 		n.intervalInsert(new Node(new Interval(19, 20)));
 		System.out.println("Begin Test!");
+		n.inorder(n.root, 0);
+		System.out.println("Root: [" + n.root.interv.LOW + "," + n.root.interv.HIGH + "]");
+		n.intervalDelete(n.getRoot());
+		System.out.println("After Deletion:");
 		n.inorder(n.root, 0);
 		System.out.println("Root: [" + n.root.height +"]");
 		List<Interval> lst = n.overlappingIntervals(new Interval(15, 19));
