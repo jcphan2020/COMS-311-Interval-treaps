@@ -98,7 +98,8 @@ public class IntervalTreap {
 	        x.imax = max(x.interv.HIGH, x.left.imax);
 	    }else{
  	       x.imax = x.interv.HIGH;
- 	   }
+		}
+		//System.out.println("[" + x.interv.LOW + "," + x.interv.HIGH + "]");
 	}
 
 	//fix the imax from node x to the root of the treap
@@ -129,23 +130,22 @@ public class IntervalTreap {
     //        rt.right = intervalDelete(z.right);
     //	}
 
-    	//if key found
+		//if key found
+		//save z's parent in p
+		Node p = z.parent;
     //	else{
        		//Case 1: the node has no child
         	if(z.left == null && z.right == null){
-        	    //save rt parent in p
-        	    Node p = z.parent; // Johnson -> Need the word Node at the start to get rid of error sign. Look at my codes in intervalInsert for examples
-
 				//delete z
-				if(z == z.parent.left){// if z is the left child of its parent
-					z.parent.left = null; //empty left child of z's parent
+				if(z == p.left){// if z is the left child of its parent
+					p.left = null; //empty left child of z's parent
 					z = null; //empty z
 					/*z and z.parent.left are two different storage space. The exactly same address 
 					pointing to the key of z is saved in z and z.parent.left both. If we set z as null only, 
 					we only empty the address in z, but the address in z.parent.left didn't change.
 					And the address in z.parent.left is still pointing to the key of z.*/
 				}else{// if z is the right child of its parent
-					z.parent.right = null;
+					p.right = null;
 					z = null;
 				}
 				//z = null;
@@ -182,28 +182,37 @@ public class IntervalTreap {
 
         	//Case 3: the node has one child only
         	else{
+				int p_left_or_right = 0; //Check whether z is left child (1) or right child (2) of its parent, p.
         	    // the node has right child only, replace the node with its right child
         	    if(z.left == null){ // Johnson -> Is this "rt" supposed to be here?
-					if(z == z.parent.left){//if z is the left child of its parent
-						z.parent.left = z.right;	// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
+					if(z == p.left){//if z is the left child of its parent
+						p_left_or_right = 1;
+						p.left = z.right;	// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
 						z = null;
 					}else{//if z is the right child of its parent
-						z.parent.right = z.right;
+						p_left_or_right = 2;
+						p.right = z.right;
 						z = null;
 					}
 				}
         	    // the node has left child only, replace the node with its left child
         	    else{
-					if(z == z.parent.left){
-        	        	z.parent.left = z.left;		// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
+					if(z == p.left){
+						p_left_or_right = 1;
+        	        	p.left = z.left;		// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
 						z = null;
 					}else{
-						z.parent.right = z.left;
+						p_left_or_right = 2;
+						p.right = z.left;
 						z = null;
 					}
 				}
         	    //after deleted original z, fix the imax of all nodes in the path from new z to the real root of the treap
-        	    imaxFixAll(z);
+        	    if(p_left_or_right == 1){//z is the left child of its parent, p
+					imaxFixAll(p.left);
+				}else{//z is the right child of its parent, p
+					imaxFixAll(p.right);
+				}
         	}
     	//}
 	}
@@ -411,8 +420,7 @@ public class IntervalTreap {
 		System.out.println("Initializing!");
 		n.intervalInsert(new Node(new Interval(16, 21)));
 		n.intervalInsert(new Node(new Interval(8, 9)));
-		//n.intervalInsert(new Node(new Interval(25, 30)));
-		n.intervalInsert(new Node(new Interval(24, 25)));
+		n.intervalInsert(new Node(new Interval(25, 30)));
 		n.intervalInsert(new Node(new Interval(5, 8)));
 		n.intervalInsert(new Node(new Interval(15, 23)));
 		n.intervalInsert(new Node(new Interval(0, 3)));
@@ -422,25 +430,22 @@ public class IntervalTreap {
 		n.intervalInsert(new Node(new Interval(19, 20)));
 		System.out.println("Begin Test!");
 		n.inorder(n.root, 0);
-		//System.out.println("Root: [" + n.root.interv.LOW + "," + n.root.interv.HIGH + "]");
-		//n.intervalDelete(n.root);
-		//System.out.println("After Deletion:");
-		//System.out.println("Root: [" + n.root.interv.LOW + "," + n.root.interv.HIGH + "]");
-		//System.out.println("Root.right: [" + n.root.right.interv.LOW + "," + n.root.right.interv.HIGH + "]");
-		//System.out.println("Root.right.right: [" + n.root.right.right.interv.LOW + "," + n.root.right.right.interv.HIGH + "]");
-		System.out.println("1");
-		Node temp = n.root.right;
-		System.out.println("2");
-		System.out.println("Root.right: [" + temp.interv.LOW + "," + temp.interv.HIGH + "]");
-		System.out.println("Root.right.right: [" + temp.right.interv.LOW + "," + temp.right.interv.HIGH + "]");
+		System.out.println("Root: [" + n.root.interv.LOW + "," + n.root.interv.HIGH + "]");
+		System.out.println("Root.right: [" + n.root.right.interv.LOW + "," + n.root.right.interv.HIGH + "]");
 		//System.out.println("Root.left: [" + n.root.left.interv.LOW + "," + n.root.left.interv.HIGH + "]");
-		//n.intervalDelete(n.root.right.right);
-		//n.inorder(n.root, 0);
-		System.out.println("Root: [" + n.root.height +"]");
-		List<Interval> lst = n.overlappingIntervals(new Interval(15, 19));
-		for(int i = 0; i < lst.size(); i++) {
-			Interval tmp = lst.get(i);
-			System.out.println("[" + tmp.getLow() +", " + tmp.getHigh() +"]");
-		}
+
+
+		n.intervalDelete(n.root.right);
+		System.out.println("After Deletion:");
+		System.out.println("Root: [" + n.root.interv.LOW + "," + n.root.interv.HIGH + "]");
+		System.out.println("Root.right: [" + n.root.right.interv.LOW + "," + n.root.right.interv.HIGH + "]");
+		//System.out.println("Root.left: [" + n.root.left.interv.LOW + "," + n.root.left.interv.HIGH + "]");
+		n.inorder(n.root, 0);
+		System.out.println("Root: [" + n.root.height + "]");
+		//List<Interval> lst = n.overlappingIntervals(new Interval(15, 19));
+		//for(int i = 0; i < lst.size(); i++) {
+		//	Interval tmp = lst.get(i);
+		//	System.out.println("[" + tmp.getLow() +", " + tmp.getHigh() +"]");
+		//}
 	}
 }
