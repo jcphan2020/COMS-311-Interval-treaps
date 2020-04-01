@@ -222,11 +222,11 @@ public class IntervalTreap {
 	}
 	
 	//Implement for extra credit
-	public List<Interval> overlappingIntervals(Interval i){ //Johnson -> I'll leave this one to you if you want some extra credit!
-		List<Interval> lst = new ArrayList<Interval>();
-		
-		return lst;
-	}
+	//public List<Interval> overlappingIntervals(Interval i){ //Johnson -> I'll leave this one to you if you want some extra credit!
+	//	List<Interval> lst = new ArrayList<Interval>();
+	//	
+	//	return lst;
+	//}
 
 	//Making the right child node the parent node with the current node as left child node
 	//Based on Algorithms from Red Black Tree, modified with imax. Additionally, modify x.left node height and y.right node height.
