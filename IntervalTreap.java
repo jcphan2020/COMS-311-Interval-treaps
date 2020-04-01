@@ -134,7 +134,7 @@ public class IntervalTreap {
        		//Case 1: the node has no child
         	if(z.left == null && z.right == null){
         	    //save rt parent in p
-        	    Note p = z.parent; // Johnson -> Need the word Node at the start to get rid of error sign. Look at my codes in intervalInsert for examples
+        	    Node p = z.parent; // Johnson -> Need the word Node at the start to get rid of error sign. Look at my codes in intervalInsert for examples
 
         	    //delete z
 				z = null;
