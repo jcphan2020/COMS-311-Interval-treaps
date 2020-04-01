@@ -221,13 +221,29 @@ public class IntervalTreap {
 		return x;
 	}
 	
-	//Implement for extra credit
-	//public List<Interval> overlappingIntervals(Interval i){ //Johnson -> I'll leave this one to you if you want some extra credit!
-	//	List<Interval> lst = new ArrayList<Interval>();
-	//	
-	//	return lst;
-	//}
+	//Use private search function.
+	public List<Interval> overlappingIntervals(Interval i){
+		List<Interval> lst = new ArrayList<Interval>();
+		lst = searchTree(lst, this.root, i);
+		return lst;
+	}
 
+	//Private recurrence. Search left if there is overlap. Search right for overlap.
+	private List<Interval> searchTree(List<Interval> lst, Node n, Interval i) {
+		List<Interval> tmp = lst;
+		if(n != null) {
+			if(n.left != null && i.LOW <= n.left.imax) {
+				tmp = searchTree(tmp, n.left, i);
+			}
+			
+			if((i.LOW <= n.interv.HIGH && n.interv.LOW <= i.HIGH) || (i.LOW <= n.interv.HIGH && n.interv.LOW <= i.HIGH)) {
+				tmp.add(n.interv);
+			}
+
+			tmp = searchTree(tmp, n.right, i);
+		}
+		return tmp;
+	}
 	//Making the right child node the parent node with the current node as left child node
 	//Based on Algorithms from Red Black Tree, modified with imax. Additionally, modify x.left node height and y.right node height.
 	/*
@@ -382,5 +398,10 @@ public class IntervalTreap {
 		System.out.println("Begin Test!");
 		n.inorder(n.root, 0);
 		System.out.println("Root: [" + n.root.height +"]");
+		List<Interval> lst = n.overlappingIntervals(new Interval(15, 19));
+		for(int i = 0; i < lst.size(); i++) {
+			Interval tmp = lst.get(i);
+			System.out.println("[" + tmp.getLow() +", " + tmp.getHigh() +"]");
+		}
 	}
 }
