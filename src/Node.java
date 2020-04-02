@@ -24,6 +24,15 @@ public class Node {
 		Random rand = new Random();
 		this.priority = 1 + rand.nextInt(100);
 	}
+
+	//priority by hand for testing
+	public Node(Interval t, int pr) {
+		this.interv = t;
+		this.imax = t.getHigh();
+		this.height = 0;
+		//Random rand = new Random();
+		this.priority = pr;
+	}
 	
 	//Return the parent node
 	public Node getParent() {
