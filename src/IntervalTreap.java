@@ -74,7 +74,7 @@ public class IntervalTreap {
 		}else{
 			y.right = z;
 		}
-		if(y.priority == z.priority) {
+		if(y != null && y.priority == z.priority) {
 			z.priority += 1;
 		}
 		while(y != null && z.priority < y.priority){
