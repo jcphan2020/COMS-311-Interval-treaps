@@ -152,7 +152,7 @@ public class IntervalTreap {
 
 				}else{//z has left child only, set its left child as root
 					this.root = z.left;
-					z.right.left = null;
+					z.left.parent = null;
 					z = null;
 				}
 			}
