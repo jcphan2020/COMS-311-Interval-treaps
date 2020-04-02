@@ -85,7 +85,7 @@ public class IntervalTreap {
 			}
 			heightFix(z);
 			y = z.parent;
-			if(y.priority == z.priority) {
+			if(y != null && y.priority == z.priority) {
 				z.priority += 1;
 			}
 		}
