@@ -3,6 +3,9 @@ import java.util.Random;
 /* 
  * Simple functions from the document.
  * This is a node for storing key values and other nodes.
+ * 
+ * Johnson Phan
+ * Luwen Jiang
  */
 public class Node {
 	Node parent, left, right;

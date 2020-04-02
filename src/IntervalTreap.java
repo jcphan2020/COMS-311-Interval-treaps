@@ -1,8 +1,12 @@
+package src;
 
 import java.util.ArrayList;
 import java.util.List;
 /*
  * The main function of the project. Need several implementing.
+ * 
+ * Johnson Phan
+ * Luwen Jiang
  */
 public class IntervalTreap {
 	Node root;

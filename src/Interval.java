@@ -1,8 +1,11 @@
-
+package src;
 /* 
  * Fairly simple based on document.
  * Create interval for storing just the left and right end points.
  * There doesn't seem to be any use for floats or double
+ *
+ * Johnson Phan
+ * Luwen Jiang
  */
 public class Interval {
 	int LOW;
