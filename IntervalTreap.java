@@ -86,7 +86,6 @@ public class IntervalTreap {
 		}
 		this.height = this.root.height;
 	}
-	
 
 	//fix the imax of only one node based on its children
 	private void imaxFix1(Node x){
@@ -99,7 +98,6 @@ public class IntervalTreap {
 	    }else{
  	       x.imax = x.interv.HIGH;
 		}
-		//System.out.println("[" + x.interv.LOW + "," + x.interv.HIGH + "]");
 	}
 
 	//fix the imax from node x to the root of the treap
@@ -113,108 +111,71 @@ public class IntervalTreap {
 	}
 
 	public void intervalDelete(Node z){
-	//	Node rt = this.root;
-		//Based on the pseudocode in BST, we don't need to check whether the Node z exists or not.
-    	//check empty tree
-    //	if(rt == null){
-	//		System.out.println("The Node doesn't exist!");
-   	//	}
-
-    //	// if the z.imax < root.imax, search in the left sub treap
-    //	if(z.interv.LOW < rt.interv.LOW){
-    //		rt.left = intervalDelete(z.left);
-    //	}
-
-    	//if the z.imax > root.imax, search in the right sub treap
-    //	else if(z.interv.LOW > rt.interv.LOW){
-    //        rt.right = intervalDelete(z.right);
-    //	}
-
-		//if key found
-		//save z's parent in p
 		Node p = z.parent;
-    //	else{
-       		//Case 1: the node has no child
-        	if(z.left == null && z.right == null){
-				//delete z
-				if(z == p.left){// if z is the left child of its parent
-					p.left = null; //empty left child of z's parent
-					z = null; //empty z
-					/*z and z.parent.left are two different storage space. The exactly same address 
-					pointing to the key of z is saved in z and z.parent.left both. If we set z as null only, 
-					we only empty the address in z, but the address in z.parent.left didn't change.
-					And the address in z.parent.left is still pointing to the key of z.*/
-				}else{// if z is the right child of its parent
-					p.right = null;
+		//Case 1: the node has no child
+		if(z.left == null && z.right == null){
+			//delete z
+			if(z == p.left){// if z is the left child of its parent
+				p.left = null; //empty left child of z's parent
+				z = null; //empty z
+			}else{// if z is the right child of its parent
+				p.right = null;
+				z = null;
+			}
+			// fix the imax of all nodes in the path from the former parent of z to the real root of the treap
+			imaxFixAll(p);
+		}
+		//Case 2: the node has two children
+		else if(z.left != null && z.right != null){
+			//if the priority of the left child less than that of the right one
+			if(z.left.priority < z.right.priority){
+				//rightRotate(z);
+				leftRotate(z);
+				//after left rotation above, z became the left child of its original right child
+				intervalDelete(z);
+			}
+			//if the priority of the right child less than that of the left one
+			else{
+				//leftRotate(z);
+				rightRotate(z);
+				//after right rotation above, z became the right child of its original left child
+				intervalDelete(z);
+			}
+		}
+		//Case 3: the node has one child only
+		else{
+			int p_left_or_right = 0; //Check whether z is left child (1) or right child (2) of its parent, p.
+			// the node has right child only, replace the node with its right child
+			if(z.left == null){
+				if(z == p.left){//if z is the left child of its parent
+					p_left_or_right = 1;
+					p.left = z.right;
+					z = null;
+				}else{//if z is the right child of its parent
+					p_left_or_right = 2;
+					p.right = z.right;
 					z = null;
 				}
-				//z = null;
-				/* Johnson ->
-				 * "z" is considered a storage. You can store other objects in "z"
-				 * Currently, "z" is stored as a Node Object. If you set "z" to "null". You are just storing "null"
-				 * The Node Object in "z" is still exist in the parent node and in the left and right node so
-				 * setting "z" to "null" likely won't change anything.
-				 * 
-				 * imaxFixAll(Node x) works fine though.
-				 */
-
-        	    // fix the imax of all nodes in the path from the former parent of z to the real root of the treap
-        	    imaxFixAll(p);
-    	    }
-
-        	//Case 2: the node has two children
-        	else if(z.left != null && z.right != null){
-        	    //if the priority of the left child less than that of the right one
-        	    if(z.left.priority < z.right.priority){
-					//rightRotate(z);
-					leftRotate(z);
-					//after left rotation above, z became the left child of its original right child
-        	        intervalDelete(z);
-        	    }
-        	    //if the priority of the right child less than that of the left one
-        	    else{
-					//leftRotate(z);
-					rightRotate(z);
-					//after right rotation above, z became the right child of its original left child
-        			intervalDelete(z);
-            	}
-        	}
-
-        	//Case 3: the node has one child only
-        	else{
-				int p_left_or_right = 0; //Check whether z is left child (1) or right child (2) of its parent, p.
-        	    // the node has right child only, replace the node with its right child
-        	    if(z.left == null){ // Johnson -> Is this "rt" supposed to be here?
-					if(z == p.left){//if z is the left child of its parent
-						p_left_or_right = 1;
-						p.left = z.right;	// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
-						z = null;
-					}else{//if z is the right child of its parent
-						p_left_or_right = 2;
-						p.right = z.right;
-						z = null;
-					}
+			}
+			// the node has left child only, replace the node with its left child
+			else{
+				if(z == p.left){
+					p_left_or_right = 1;
+					p.left = z.left;
+					z = null;
+				}else{
+					p_left_or_right = 2;
+					p.right = z.left;
+					z = null;
 				}
-        	    // the node has left child only, replace the node with its left child
-        	    else{
-					if(z == p.left){
-						p_left_or_right = 1;
-        	        	p.left = z.left;		// Johnson -> If this is supposed to be deleting "z" please read my comment on line 135
-						z = null;
-					}else{
-						p_left_or_right = 2;
-						p.right = z.left;
-						z = null;
-					}
-				}
-        	    //after deleted original z, fix the imax of all nodes in the path from new z to the real root of the treap
-        	    if(p_left_or_right == 1){//z is the left child of its parent, p
-					imaxFixAll(p.left);
-				}else{//z is the right child of its parent, p
-					imaxFixAll(p.right);
-				}
-        	}
-    	//}
+			}
+			//after deleted original z, fix the imax of all nodes in the path from new z to the real root of the treap
+			if(p_left_or_right == 1){//z is the left child of its parent, p
+				imaxFixAll(p.left);
+			}else{//z is the right child of its parent, p
+				imaxFixAll(p.right);
+			}
+		}
 	}
 	
 	//Using a portion of IntervalInsert Algorithm, it follows that path to find the Node.
@@ -277,6 +238,7 @@ public class IntervalTreap {
 		}
 		return tmp;
 	}
+
 	//Making the right child node the parent node with the current node as left child node
 	//Based on Algorithms from Red Black Tree, modified with imax. Additionally, modify x.left node height and y.right node height.
 	/*
@@ -404,48 +366,5 @@ public class IntervalTreap {
 	//Still takes O(1) time
 	private int max(int a, int b, int c) {
 		return max(max(a, b), c);
-	}
-
-	//Delete after completion of project
-	private void inorder(Node n, int i) {
-		if(n != null) {
-			inorder(n.left, i + 1);
-			System.out.println("Actual Height: "+i+" |Stored Height: "+n.height+"| ["+n.interv.LOW +","+n.interv.HIGH+"]| IMAX: "+ Integer.toString(n.imax)+"| Priority: "+ Integer.toString(n.priority));
-			inorder(n.right, i + 1);
-		}
-	}
-
-	public static void main(String[] args) {
-		IntervalTreap n = new IntervalTreap();
-		System.out.println("Initializing!");
-		n.intervalInsert(new Node(new Interval(16, 21)));
-		n.intervalInsert(new Node(new Interval(8, 9)));
-		n.intervalInsert(new Node(new Interval(25, 30)));
-		n.intervalInsert(new Node(new Interval(5, 8)));
-		n.intervalInsert(new Node(new Interval(15, 23)));
-		n.intervalInsert(new Node(new Interval(0, 3)));
-		n.intervalInsert(new Node(new Interval(6, 10)));
-		n.intervalInsert(new Node(new Interval(17, 19)));
-		n.intervalInsert(new Node(new Interval(26, 26)));
-		n.intervalInsert(new Node(new Interval(19, 20)));
-		System.out.println("Begin Test!");
-		n.inorder(n.root, 0);
-		System.out.println("Root: [" + n.root.interv.LOW + "," + n.root.interv.HIGH + "]");
-		System.out.println("Root.right: [" + n.root.right.interv.LOW + "," + n.root.right.interv.HIGH + "]");
-		//System.out.println("Root.left: [" + n.root.left.interv.LOW + "," + n.root.left.interv.HIGH + "]");
-
-
-		n.intervalDelete(n.root.right);
-		System.out.println("After Deletion:");
-		System.out.println("Root: [" + n.root.interv.LOW + "," + n.root.interv.HIGH + "]");
-		System.out.println("Root.right: [" + n.root.right.interv.LOW + "," + n.root.right.interv.HIGH + "]");
-		//System.out.println("Root.left: [" + n.root.left.interv.LOW + "," + n.root.left.interv.HIGH + "]");
-		n.inorder(n.root, 0);
-		System.out.println("Root: [" + n.root.height + "]");
-		//List<Interval> lst = n.overlappingIntervals(new Interval(15, 19));
-		//for(int i = 0; i < lst.size(); i++) {
-		//	Interval tmp = lst.get(i);
-		//	System.out.println("[" + tmp.getLow() +", " + tmp.getHigh() +"]");
-		//}
 	}
 }
