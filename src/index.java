@@ -20,13 +20,13 @@ public class index {
         List<Node> lst = new ArrayList<Node>();
       
         /*
-        lst.add(new Node(new Interval(16, 21), 29));//
-        lst.add(new Node(new Interval(8, 9), 20));//
-        lst.add(new Node(new Interval(5, 8), 80));//
-        lst.add(new Node(new Interval(6, 10), 19));//
-        lst.add(new Node(new Interval(0, 3), 73));//
-        lst.add(new Node(new Interval(7, 25), 22));//
-        lst.add(new Node(new Interval(15, 23), 36));//
+        lst.add(new Node(new Interval(16, 21), 29));
+        lst.add(new Node(new Interval(8, 9), 20));
+        lst.add(new Node(new Interval(5, 8), 1));//
+        lst.add(new Node(new Interval(6, 10), 4));//
+        lst.add(new Node(new Interval(0, 3), 82));//
+        lst.add(new Node(new Interval(7, 25), 74));//
+        lst.add(new Node(new Interval(15, 23), 36));
         lst.add(new Node(new Interval(25, 30), 73));
         lst.add(new Node(new Interval(17, 19), 42));
         lst.add(new Node(new Interval(19, 20), 55));
