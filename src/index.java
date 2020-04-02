@@ -37,9 +37,7 @@ public class index {
         inorder(n.root, 0);
 
         System.out.println("Deleting!");
-        for(int i = 0; i < lst.size(); i++) {
-            n.intervalDelete(lst.get(i));
-        }
+        n.intervalDelete(n.root);
         inorder(n.root, 0);
     }
 }
