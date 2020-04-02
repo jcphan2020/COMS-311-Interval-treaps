@@ -29,13 +29,15 @@ public class index {
         lst.add(new Node(new Interval(17, 19)));
         lst.add(new Node(new Interval(19, 20)));
         lst.add(new Node(new Interval(26, 26)));
+
         System.out.println("Inserting!");
         for(int i = 0; i < lst.size(); i++) {
             n.intervalInsert(lst.get(i));
         }
         inorder(n.root, 0);
+
         System.out.println("Deleting!");
-        for(int i = lst.size() - 1; i >= 0; i--) {
+        for(int i = 0; i < lst.size(); i++) {
             n.intervalDelete(lst.get(i));
         }
         inorder(n.root, 0);
