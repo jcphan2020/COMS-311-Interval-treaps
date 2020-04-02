@@ -19,6 +19,7 @@ public class index {
         IntervalTreap n = new IntervalTreap();
         List<Node> lst = new ArrayList<Node>();
       
+        /*
         lst.add(new Node(new Interval(16, 21), 29));//
         lst.add(new Node(new Interval(8, 9), 20));//
         lst.add(new Node(new Interval(5, 8), 80));//
@@ -30,9 +31,9 @@ public class index {
         lst.add(new Node(new Interval(17, 19), 42));
         lst.add(new Node(new Interval(19, 20), 55));
         lst.add(new Node(new Interval(26, 26), 79));
-        
+        */
 
-        /*
+        
         lst.add(new Node(new Interval(16, 21)));
         lst.add(new Node(new Interval(8, 9)));
         lst.add(new Node(new Interval(5, 8)));
@@ -44,17 +45,21 @@ public class index {
         lst.add(new Node(new Interval(17, 19)));
         lst.add(new Node(new Interval(19, 20)));
         lst.add(new Node(new Interval(26, 26)));
-        */
+        
 
 
         System.out.println("Inserting!");
         for(int i = 0; i < lst.size(); i++) {
+            System.out.println("Inserting!2");
+            Node temp2 = lst.get(i);
+            System.out.println("currrent root: [" + temp2.interv.LOW + ", " + temp2.interv.HIGH + "]");
             n.intervalInsert(lst.get(i));
+            System.out.println("Inserting!2");
         }
         inorder(n.root, 0);
 
         System.out.println("Deleting!");
-            for(int i = lst.size() - 1; i >= 0; i--) {
+        for(int i = lst.size() - 1; i >= 0; i--) {
             Node temp = lst.get(i);
             System.out.println("currrent root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH + "]");
             /*            if(n.root.left != null){
