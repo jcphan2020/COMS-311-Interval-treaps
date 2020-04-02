@@ -44,14 +44,19 @@ public class index {
         lst.add(new Node(new Interval(17, 19)));
         lst.add(new Node(new Interval(19, 20)));
         lst.add(new Node(new Interval(26, 26)));
+<<<<<<< HEAD
         */
+=======
+>>>>>>> 8fd34eda366a6b9a1019ad0241422c3a0788f897
 
         System.out.println("Inserting!");
         for(int i = 0; i < lst.size(); i++) {
             n.intervalInsert(lst.get(i));
         }
         inorder(n.root, 0);
+
         System.out.println("Deleting!");
+<<<<<<< HEAD
         for(int i = lst.size() - 1; i >= 0; i--) {
             Node temp = lst.get(i);
             System.out.println("currrent root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH + "]");
@@ -80,5 +85,9 @@ public class index {
         
         //n.intervalDelete(n.root);
         //inorder(n.root, 0);
+=======
+        n.intervalDelete(n.root);
+        inorder(n.root, 0);
+>>>>>>> 8fd34eda366a6b9a1019ad0241422c3a0788f897
     }
 }

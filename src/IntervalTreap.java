@@ -74,7 +74,9 @@ public class IntervalTreap {
 		}else{
 			y.right = z;
 		}
-
+		if(y.priority == z.priority) {
+			z.priority += 1;
+		}
 		while(y != null && z.priority < y.priority){
 			if(y.right == z){
 				leftRotate(y);
@@ -83,6 +85,9 @@ public class IntervalTreap {
 			}
 			heightFix(z);
 			y = z.parent;
+			if(y.priority == z.priority) {
+				z.priority += 1;
+			}
 		}
 		while(y != null) {
 			heightFix(y);
