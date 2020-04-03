@@ -178,10 +178,20 @@ public class IntervalTreap {
 					//System.out.println("c");
 					z = null; //empty z
 				}else{// if z is the right child of its parent
-					//System.out.println("d");
+					System.out.println("d");
+					if(z.interv.LOW == 25 && z.interv.HIGH == 30){
+						//System.out.println("z: [" + z.left.interv.LOW + ", " + z.left.interv.HIGH + "]");
+						System.out.println("p: [" + p.interv.LOW + ", " + p.interv.HIGH + "]");
+						System.out.println("p.right: [" + p.right.interv.LOW + ", " + p.right.interv.HIGH + "]");
+					}
 					p.right = null;
-					//System.out.println("e");
+					System.out.println("e");
 					z = null;
+					/*
+					if(z == null && p.right == null){
+						System.out.println("z null && p.right");
+					}
+					*/
 				}
 				// fix the imax of all nodes in the path from the former parent of z to the real root of the treap
 				imaxFixAll(p);
@@ -219,14 +229,18 @@ public class IntervalTreap {
 					//System.out.println("!~!");
 					//System.out.println("p.left: [" + p.left.interv.LOW + ", " + p.left.interv.HIGH + "]");
 					if(z == p.left){//if z is the left child of its parent
-						//System.out.println("~");
 						p_left_or_right = 1;
+
 						p.left = z.right;
+						z.right.parent = p;
+
 						z = null;
 					}else{//if z is the right child of its parent
-						//System.out.println("~~");
 						p_left_or_right = 2;
+					
 						p.right = z.right;
+						z.right.parent = p;
+						
 						z = null;
 					}
 				}
