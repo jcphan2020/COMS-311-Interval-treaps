@@ -120,28 +120,19 @@ public class IntervalTreap {
 	}
 
 	public void intervalDelete(Node z){
-		//System.out.println("first");
-		
-		//System.out.println("z parent: [" + p.interv.LOW + ", " + p.interv.HIGH + "]");
-		//System.out.println("second");
-		//System.out.println("z.left:[" + z.left.interv.LOW + ", " + z.left.interv.HIGH + "]");
-		//System.out.println("z.left:[" + z.right.interv.LOW + ", " + z.right.interv.HIGH + "]");
-
 		if(z == this.root){// Case 1: if z is the root
 			if(z.left == null && z.right == null){//Case 1.1: if z is the root, the node, z, has no child
 				this.root = null;// empty the hole treap
 			}else if(z.left != null && z.right != null){//Case 1.2: if z is the root, the node, z, has two children
 				if(z.left.priority < z.right.priority){
 					rightRotate(z);
-					//leftRotate(z);
-					//after left rotation above, z became the left child of its original right child
+					//after right rotation above, z became the right child of its original right child
 					intervalDelete(z);
 				}
 				//if the priority of the right child less than that of the left one
 				else{
 					leftRotate(z);
-					//rightRotate(z);
-					//after right rotation above, z became the right child of its original left child
+					//after left rotation above, z became the left child of its original left child
 					intervalDelete(z);
 				}
 			}else{//Case 1.3: if z is the root, the node, z, has one children only
@@ -159,39 +150,15 @@ public class IntervalTreap {
 		}else{//Case 2: z is not the root
 			Node p = z.parent;
 
-			/*
-			if(p == null){
-				System.out.println("p is null.");
-			}else{
-				System.out.println("p is NOT null.");
-				System.out.println("p: [" + p.interv.LOW + ", " + p.interv.HIGH + "]");
-			}
-			*/
-
 			//Case 2.1: z is NOT the root, the node, z, has no child
 			if(z.left == null && z.right == null){
-				//System.out.println("a");
 				//delete z
 				if(z == p.left){// if z is the left child of its parent
-					//System.out.println("b");
 					p.left = null; //empty left child of z's parent
-					//System.out.println("c");
 					z = null; //empty z
 				}else{// if z is the right child of its parent
-					System.out.println("d");
-					if(z.interv.LOW == 25 && z.interv.HIGH == 30){
-						//System.out.println("z: [" + z.left.interv.LOW + ", " + z.left.interv.HIGH + "]");
-						System.out.println("p: [" + p.interv.LOW + ", " + p.interv.HIGH + "]");
-						System.out.println("p.right: [" + p.right.interv.LOW + ", " + p.right.interv.HIGH + "]");
-					}
 					p.right = null;
-					System.out.println("e");
 					z = null;
-					/*
-					if(z == null && p.right == null){
-						System.out.println("z null && p.right");
-					}
-					*/
 				}
 				// fix the imax of all nodes in the path from the former parent of z to the real root of the treap
 				imaxFixAll(p);
@@ -199,38 +166,26 @@ public class IntervalTreap {
 			//Case 2.2: z is NOT the root, the node, z, has two children
 			else if(z.left != null && z.right != null){
 				//if the priority of the left child less than that of the right one
-				//System.out.println("1");
 				if(z.left.priority < z.right.priority){
 					rightRotate(z);
-					//System.out.println("2");
-					//leftRotate(z);
-					//after left rotation above, z became the left child of its original right child
-					//System.out.println("3");
 					intervalDelete(z);
 				}
 				//if the priority of the right child less than that of the left one
 				else{
 					leftRotate(z);
-					//System.out.println("4");
-					//rightRotate(z);
-					//System.out.println("5");
-					//after right rotation above, z became the right child of its original left child
 					intervalDelete(z);
 				}
 			}
 			//Case 2.3: z is NOT the root, the node, z, has one child only
 			else{
 				int p_left_or_right = 0; //Check whether z is left child (1) or right child (2) of its parent, p.
+
 				// the node has right child only, replace the node with its right child
-				//System.out.println("!~");
-				//System.out.println("z.left: [" + z.left.interv.LOW + ", " + z.left.interv.HIGH + "]");
-				//System.out.println("!~");
 				if(z.left == null){
-					//System.out.println("!~!");
-					//System.out.println("p.left: [" + p.left.interv.LOW + ", " + p.left.interv.HIGH + "]");
 					if(z == p.left){//if z is the left child of its parent
 						p_left_or_right = 1;
 
+						//link z.parent with z right child
 						p.left = z.right;
 						z.right.parent = p;
 
@@ -238,6 +193,7 @@ public class IntervalTreap {
 					}else{//if z is the right child of its parent
 						p_left_or_right = 2;
 					
+						//link z.parent with z right child
 						p.right = z.right;
 						z.right.parent = p;
 						
@@ -247,19 +203,20 @@ public class IntervalTreap {
 				// the node, z, has left child only, replace the node with its left child
 				else{
 					if(z == p.left){
-						//System.out.println("~~~");
 						p_left_or_right = 1;
+
+						//link z.parent with z left child
 						p.left = z.left;
 						z.left.parent = p;
+
 						z = null;
 					}else{
-						//System.out.println("~~~~1");
 						p_left_or_right = 2;
+
+						//link z.parent with z left child
 						p.right = z.left;
-						//System.out.println("~~~~2");
-						//System.out.println("p: [" + p.interv.LOW + ", " + p.interv.HIGH + "]");
 						z.left.parent = p;
-						//System.out.println("~~~~3");
+
 						z = null;
 					}
 				}

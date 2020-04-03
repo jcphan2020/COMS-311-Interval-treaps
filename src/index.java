@@ -55,35 +55,10 @@ public class index {
         inorder(n.root, 0);
 
         System.out.println("Deleting!");
-        /*
-        for(int i = lst.size() - 1; i >= 0; i--) {
-            Node temp = lst.get(i);
-            System.out.println("currrent root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH + "]");
-            
-            //System.out.println("currrent root.right: [" + n.root.right.interv.LOW + ", " + n.root.right.interv.HIGH + "]");
-            System.out.println("deleted node: [" + temp.interv.LOW + ", " + temp.interv.HIGH + "]");
-            //if(temp.parent != null){
-            //    System.out.println("the parent of deleted node: [" + temp.parent.interv.LOW + ", " + temp.parent.interv.HIGH + "]");
-            //}
-            n.intervalDelete(temp);
-            inorder(n.root, 0);
-        }
-        */
 
         for(int i = lst.size() - 1; i >= 0; i--) {
             Node temp = lst.get(i);
-            System.out.println("currrent root: [" + n.root.interv.LOW + ", " + n.root.interv.HIGH + "]");
-            /*            if(n.root.left != null){
-                System.out.println("currrent root.left: [" + n.root.left.interv.LOW + ", " + n.root.left.interv.HIGH + "]");
-            }
-            */
-            //System.out.println("currrent root.right: [" + n.root.right.interv.LOW + ", " + n.root.right.interv.HIGH + "]");
-            System.out.println("deleted node: [" + temp.interv.LOW + ", " + temp.interv.HIGH + "]");
-            //if(temp.parent != null){
-            //    System.out.println("the parent of deleted node: [" + temp.parent.interv.LOW + ", " + temp.parent.interv.HIGH + "]");
-            //}
             n.intervalDelete(temp);
-            inorder(n.root, 0);
         }
 
         if(n.root == null){
@@ -91,10 +66,5 @@ public class index {
         }else{
             System.out.println("No, still something...");
         }
-
-
-        //n.intervalDelete(n.root);
-        //inorder(n.root, 0);
-
     }
 }
