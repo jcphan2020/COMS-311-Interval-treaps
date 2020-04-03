@@ -19,21 +19,6 @@ public class index {
         IntervalTreap n = new IntervalTreap();
         List<Node> lst = new ArrayList<Node>();
 
-        /*
-        lst.add(new Node(new Interval(16, 21), 53));//
-        lst.add(new Node(new Interval(8, 9), 31));//
-        lst.add(new Node(new Interval(5, 8), 71));//
-        lst.add(new Node(new Interval(6, 10), 42));//
-        lst.add(new Node(new Interval(0, 3), 23));//
-        lst.add(new Node(new Interval(7, 25), 75));//
-        lst.add(new Node(new Interval(15, 23), 80));//
-        lst.add(new Node(new Interval(25, 30), 59));//
-        lst.add(new Node(new Interval(17, 19), 24));//
-        lst.add(new Node(new Interval(19, 20), 73));//
-        lst.add(new Node(new Interval(26, 26), 19));//
-        */
-
-        
         lst.add(new Node(new Interval(16, 21)));
         lst.add(new Node(new Interval(8, 9)));
         lst.add(new Node(new Interval(5, 8)));
@@ -45,8 +30,6 @@ public class index {
         lst.add(new Node(new Interval(17, 19)));
         lst.add(new Node(new Interval(19, 20)));
         lst.add(new Node(new Interval(26, 26)));
-        
-
 
         System.out.println("Inserting!");
         for(int i = 0; i < lst.size(); i++) {
